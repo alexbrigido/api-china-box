@@ -26,9 +26,16 @@ routes.post('/', async (req, res, next) => {
 })
 
 
-routes.get('/:id', (req, res) => {
+routes.get('/:id', async (req, res) => {
     const { id } = req.params
-    res.send('pedido')
+    try {
+        const doc = await Pedido.find({
+            _id: id
+        }).populate("lista.idProduto")
+        res.status(200).send(doc)
+    } catch(err) {
+        res.status(404).send( {mensagem: "Item não encontrado." })
+    }
 })
 
 
